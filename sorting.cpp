@@ -6,6 +6,22 @@
 #include <condition_variable>
 
 using namespace std;
+
+int linear_search(vector<int> &list, int target)
+{
+    // return index of number found if not found then index = -1
+    int i = 0;
+    for (int num : list)
+    {
+        if (num == target)
+        {
+            return i;
+        }
+        ++i;
+    }
+    return -1;
+}
+
 vector<int> bubble_sort(vector<int> list)
 {
     cout << "using bubble sort\n";
@@ -41,8 +57,8 @@ vector<int> sleep_sort(vector<int> &list)
     {
         if (i < 0)
         {
-            cout<<"error:this list has a negtive number\n";
-            return{} ;
+            cout << "error:this list has a negtive number\n";
+            return {};
         }
     }
     cout << "using sleep sort\n";
@@ -59,11 +75,38 @@ vector<int> sleep_sort(vector<int> &list)
     }
     return output_list;
 }
+int earse_small(vector<int> &list)
+{
+    cout << "earse small function called\n";
+
+    // find smallest number form the list return it and removes it from the vector
+    int small = INT_MAX;
+    for (int num : list)
+    {
+        if (num < small)
+        {
+            small = num;
+        }
+    }
+    int index = linear_search(list, small);
+    list.erase(list.begin() + index);
+
+    cout << "earse small function finised\n";
+    return small;
+}
+vector<int> selection_sort(vector<int> &list)
+{
+    vector<int> sorted_list;
+    while(list.size()>0){
+        sorted_list.push_back(earse_small(list));
+    }
+    return sorted_list;
+}
 
 int main()
 {
-    vector<int> nums = {1, 4, 5, 6, 2, 4, 3, 7, 8, 6, 7, 8, 5, -1, 0};
-    nums = sleep_sort(nums);
+    vector<int> nums = {1, 4, 5, 6, 2, 4, 3, 7, 8, 6, 7,56,7678, 8, 5, -1, 0,99,123,465,876,978};
+    nums = selection_sort(nums);
     for (auto &i : nums)
     {
         cout << i << "\n";
