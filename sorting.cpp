@@ -43,6 +43,63 @@ vector<int> bubble_sort(vector<int> list)
     }
     return list;
 }
+vector<int> merge_sort(vector<int> arr)
+{
+    cout << "merge_sort called\n";
+    int arr_size = arr.size();
+    if (arr_size <= 1)
+    {
+        return arr;
+    }
+
+    int mid = (arr_size - 1) / 2;
+    vector<int> list1 = {};
+    vector<int> list2 = {};
+    if (arr_size > 1)
+    {
+        for (int i = 0; i <= mid; ++i)
+        {
+            list1.push_back(arr[i]);
+        }
+        for (int i = mid + 1; i < arr_size; ++i)
+        {
+            list2.push_back(arr[i]);
+        }
+
+        list1 = merge_sort(list1);
+        list2 = merge_sort(list2);
+    }
+    // merge step
+    vector<int> ordered_list;
+    int i = 0;
+    int j = 0;
+    while (i < list1.size() && j < list2.size())
+    {
+        if (list1[i] < list2[j])
+        {
+            ordered_list.push_back(list1[i]);
+            ++i;
+        }
+        else
+        {
+            ordered_list.push_back(list2[j]);
+            ++j;
+        }
+    }
+    while (i < list1.size())
+    {
+        ordered_list.push_back(list1[i]);
+        ++i;
+    }
+
+    while (j < list2.size())
+    {
+        ordered_list.push_back(list2[j]);
+        ++j;
+    }
+    cout << "merge sort done\n";
+    return ordered_list;
+}
 
 void worker(int k, vector<int> &output_list, mutex &m)
 {
@@ -77,7 +134,6 @@ vector<int> sleep_sort(vector<int> &list)
 }
 int earse_small(vector<int> &list)
 {
-    cout << "earse small function called\n";
 
     // find smallest number form the list return it and removes it from the vector
     int small = INT_MAX;
@@ -91,22 +147,24 @@ int earse_small(vector<int> &list)
     int index = linear_search(list, small);
     list.erase(list.begin() + index);
 
-    cout << "earse small function finised\n";
     return small;
 }
 vector<int> selection_sort(vector<int> &list)
 {
+    cout << "selection sort called\n";
     vector<int> sorted_list;
-    while(list.size()>0){
+    while (list.size() > 0)
+    {
         sorted_list.push_back(earse_small(list));
     }
+    cout << "selection sort done\n";
     return sorted_list;
 }
 
 int main()
 {
-    vector<int> nums = {1, 4, 5, 6, 2, 4, 3, 7, 8, 6, 7,56,7678, 8, 5, -1, 0,99,123,465,876,978};
-    nums = selection_sort(nums);
+    vector<int> nums = {1, 4, 5, 6, 2, 4, 3, 7, 8, 6, 7, 56, 7678, 8, 5, -1, 0, 99, 123, 465, INT_MIN, 876, 978, 10002, INT_MAX};
+    nums = merge_sort(nums);
     for (auto &i : nums)
     {
         cout << i << "\n";

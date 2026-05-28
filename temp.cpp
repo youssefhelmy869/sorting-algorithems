@@ -1,59 +1,67 @@
 #include <vector>
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <condition_variable>
 
 using namespace std;
 
-int linear_search(vector<int> &list, int target)
+
+
+vector<int> merge_sort(vector<int> arr)
 {
-    // return index of number found if not found then index = -1
-    int i = 0;
-    for (int num : list)
+    int arr_size = arr.size();
+    if (arr_size <= 1)
     {
-        if (num == target)
+        return arr;
+    }
+
+    int mid = (arr_size - 1) / 2;
+    vector<int> list1 = {};
+    vector<int> list2 = {};
+    if (arr_size > 1)
+    {
+        for (int i = 0; i <= mid; ++i)
         {
-            return i;
+            list1.push_back(arr[i]);
         }
+        for (int i = mid + 1; i < arr_size; ++i)
+        {
+            list2.push_back(arr[i]);
+        }
+
+        list1 = merge_sort(list1);
+        list2 = merge_sort(list2);
+    }
+    // merge step
+    vector<int> ordered_list;
+    int i = 0;
+    int j = 0;
+    while (i < list1.size() && j < list2.size())
+    {
+        if (list1[i] < list2[j])
+        {
+            ordered_list.push_back(list1[i]);
+            ++i;
+        }
+        else
+        {
+            ordered_list.push_back(list2[j]);
+            ++j;
+        }
+    }
+    while (i < list1.size())
+    {
+        ordered_list.push_back(list1[i]);
         ++i;
     }
-    return -1;
-}
 
-int earse_small(vector<int> &list)
-{
-    cout << "earse small function called\n";
-
-    // find smallest number form the list return it and removes it from the vector
-    int small = INT_MAX;
-    for (int num : list)
+    while (j < list2.size())
     {
-        if (num < small)
-        {
-            small = num;
-        }
+        ordered_list.push_back(list2[j]);
+        ++j;
     }
-    int index = linear_search(list, small);
-    list.erase(list.begin() + index);
 
-    cout << "earse small function finised\n";
-    return small;
-}
-vector<int> selection_sort(vector<int> &list)
-{
-    vector<int> sorted_list;
-    while(list.size()>0){
-        sorted_list.push_back(earse_small(list));
-    }
-    return sorted_list;
-}
-
-int main()
-{
-    vector<int> nums = {3, 5, 7, 8, 2, 9};
-    vector<int> list = selection_sort(nums);
-    for (int &i : list)
-    {
-        cout << i << "\n";
-    }
-    
-    return 0;
+    return ordered_list;
 }
